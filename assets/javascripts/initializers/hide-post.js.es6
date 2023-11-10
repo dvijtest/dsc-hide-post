@@ -10,8 +10,13 @@ export default {
       rerenderTriggers: ["post.temporarily_hidden"],
 
       buttonForHide: function (post, buffer) {
-        var direction = !!post.getWithDefault("temporarily_hidden", false) ? "down" : "up";
-        return new Button("hide", direction, "chevron-" + direction);
+        // Check if the current user is an admin
+        if (this.get("currentUser.isAdmin")) {
+          var direction = !!post.getWithDefault("temporarily_hidden", false) ? "down" : "up";
+          return new Button("hide", direction, "chevron-" + direction);
+        } else {
+          return null; // Return null if the user is not an admin
+        }
       },
 
       clickHide: function () {
