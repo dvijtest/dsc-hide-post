@@ -7,18 +7,26 @@ export default {
     var PostMenuView = container.lookupFactory("view:post-menu");
 
     PostMenuView.reopen({
-      shouldRerenderHideButton: Discourse.View.renderIfChanged("post.hidden"),
+      rerenderTriggers: ["post.temporarily_hidden"],
 
       buttonForHide: function (post, buffer) {
-        var direction = !!post.getWithDefault("hidden", false) ? "down" : "up";
+        var direction = !!post.getWithDefault("temporarily_hidden", false) ? "down" : "up";
         return new Button("hide", direction, "chevron-" + direction);
       },
 
       clickHide: function () {
-        $("#post_" + this.get("post.post_number") + " .cooked").toggle();
-        this.toggleProperty("post.hidden");
+        // Check if the current user is an admin
+        if (this.get("currentUser.isAdmin")) {
+          // Toggle the visibility of the post content
+          $("#post_" + this.get("post.post_number") + " .cooked").toggle();
+          
+          // Toggle the 'temporarily_hidden' property of the post
+          this.toggleProperty("post.temporarily_hidden");
+        } else {
+          // If the user is not an admin, you can display a message or perform other actions.
+          console.log("Only admins can hide or show posts.");
+        }
       }
     });
-
   }
 };
