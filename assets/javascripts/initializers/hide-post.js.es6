@@ -32,7 +32,7 @@ export default apiInitializer("0.8", (api) => {
       // get the post object
       const post = this.get("post");
       // check if the user is an admin and the post is not deleted
-      if (this.isAdmin() && !post.deleted) {
+      if (this.isAdmin()) {
         // render the hide button
         this.attach("buttonForHide", buffer, post);
       }
